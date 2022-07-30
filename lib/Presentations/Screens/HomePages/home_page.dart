@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _peopleCubit = BlocProvider.of<PeopleCubit>(context);
+    _peopleCubit.persons.clear();
     _peopleCubit.fetchAllPopularPeople();
 
     _peopleCubit.scrollController = ScrollController();
@@ -66,31 +67,35 @@ class _HomePageState extends State<HomePage> {
           : SizedBox(
               height: SharedText.screenHeight,
               width: SharedText.screenWidth,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-                child: BlocConsumer<PeopleCubit, PeopleStates>(
-                  listener: (context, state) {},
-                  builder: (context, state) {
-                    if (state is PeopleLoadingState) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (state is PeopleFailedState) {
-                      return Center(
-                        child: CommonTitleText(
-                          textKey: state.error.toString(),
-                          textColor: AppConstants.whiteColor,
-                          textFontSize: AppConstants.mediumFontSize,
-                          lines: 5,
-                        ),
-                      );
-                    } else if (state is PeopleSuccessState) {
-                      return Column(
-                        children: [
-                          RefreshIndicator(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: BlocConsumer<PeopleCubit, PeopleStates>(
+                      listener: (context, state) {
+                        if (state is FetchPeoplesMoreDataState) {
+                          _peopleCubit.isLoadingMorePeople = true;
+                        } else {
+                          _peopleCubit.isLoadingMorePeople = false;
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state is PeopleLoadingState) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is PeopleFailedState) {
+                          return Center(
+                            child: CommonTitleText(
+                              textKey: state.error.toString(),
+                              textColor: AppConstants.whiteColor,
+                              textFontSize: AppConstants.mediumFontSize,
+                              lines: 5,
+                            ),
+                          );
+                        } else if (state is PeopleSuccessState) {
+                          return RefreshIndicator(
                             onRefresh: context.watch<PeopleCubit>().onRefresh,
+                            color: AppConstants.mainColor,
                             child: GridView.builder(
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
@@ -101,34 +106,33 @@ class _HomePageState extends State<HomePage> {
                               itemBuilder: (context, index) {
                                 /// Pagination Loading
                                 if (index + 1 >= _peopleCubit.persons.length &&
-                                    _peopleCubit.hasNextPage) {
+                                    _peopleCubit.isLoadingMorePeople) {
                                   return const Center(
                                     child: CircularProgressIndicator(),
                                   );
                                 }
 
                                 return PersonCardWidget(
-                                    personModel: _peopleCubit.persons[index]);
+                                    personModel: context
+                                        .read<PeopleCubit>()
+                                        .persons[index]);
                               },
-                              itemCount: _peopleCubit.persons.length,
+                              itemCount:
+                                  context.read<PeopleCubit>().persons.length,
                               shrinkWrap: true,
                               controller: _peopleCubit.scrollController,
                               physics: const BouncingScrollPhysics(),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 24),
                             ),
-                          ),
-                        ],
-                      );
-                    }
+                          );
+                        }
 
-                    return const Center(
-                      child: CommonTitleText(
-                        textKey: 'Something went wrong!',
-                        textColor: AppConstants.whiteColor,
-                        textFontSize: AppConstants.mediumFontSize,
-                      ),
-                    );
-                  },
-                ),
+                        return const SizedBox();
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
     );

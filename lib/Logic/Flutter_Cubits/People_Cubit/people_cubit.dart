@@ -9,6 +9,7 @@ class PeopleCubit extends Cubit<PeopleStates> {
   final IPeopleInterface _iPeopleInterface;
 
   List<PersonModel> persons = [];
+  List<PersonModel> get getPersons => persons;
 
   PeopleCubit(this._iPeopleInterface) : super(PeopleInitState());
 
@@ -20,7 +21,7 @@ class PeopleCubit extends Cubit<PeopleStates> {
   double currentScrollOffset = 0;
 
   bool hasNextPage = false;
-  bool isLoadingMoreTransactions = false;
+  bool isLoadingMorePeople = false;
 
   /// Refresh Functions
   Future onRefresh() async {
@@ -33,20 +34,20 @@ class PeopleCubit extends Cubit<PeopleStates> {
     if (scrollController.offset >
             scrollController.position.maxScrollExtent - 200 &&
         scrollController.offset <= scrollController.position.maxScrollExtent) {
-      logPrint('loading more people 111');
       if (state is! FetchPeoplesMoreDataState && hasNextPage) {
-        logPrint('loading more people 222');
-        isLoadingMoreTransactions = true;
+        isLoadingMorePeople = true;
         fetchPopularPagingPeople();
       }
     } else {
-      isLoadingMoreTransactions = false;
+      isLoadingMorePeople = false;
     }
   }
 
   fetchAllPopularPeople() async {
     try {
       page = 1;
+      persons.clear();
+
       emit(PeopleLoadingState());
 
       var result = await _iPeopleInterface.fetchAllPopularPeople(page: page);
@@ -61,6 +62,9 @@ class PeopleCubit extends Cubit<PeopleStates> {
       logPrint('_totalRecords: $_totalRecords');
 
       hasNextPage = _totalRecords > page ? true : false;
+      logPrint('hasNextPage: $hasNextPage');
+
+      isLoadingMorePeople = hasNextPage;
 
       persons = result.results!;
 
@@ -72,7 +76,7 @@ class PeopleCubit extends Cubit<PeopleStates> {
 
   void fetchPopularPagingPeople() async {
     page = page + 1;
-    logPrint('more page: $page');
+
     try {
       emit(FetchPeoplesMoreDataState());
 
@@ -83,7 +87,6 @@ class PeopleCubit extends Cubit<PeopleStates> {
             error: _iPeopleInterface.errorMsg!.errorMassage!));
         return;
       }
-      logPrint('result.data: ${result.results!.first.toJson()}');
 
       if (_totalRecords == 0) {
         _totalRecords = result.totalPages!;
