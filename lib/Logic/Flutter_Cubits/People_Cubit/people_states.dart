@@ -6,6 +6,8 @@ class PeopleLoadingState extends PeopleStates {}
 
 class PeopleSuccessState extends PeopleStates {}
 
+class FetchPeoplesMoreDataState extends PeopleStates {}
+
 class PeopleFailedState extends PeopleStates {
   final String error;
 

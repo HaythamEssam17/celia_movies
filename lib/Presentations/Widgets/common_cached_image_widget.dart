@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:celia_movies/Constants/shared_functions.dart';
+import 'package:celia_movies/Helpers/shared_texts.dart';
 import 'package:celia_movies/Presentations/Widgets/common_asset_image_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +15,9 @@ Widget commonCachedImageWidget(
   double? width,
   bool? isProfileImage = false,
 }) {
-  double imageHeight = getWidgetHeight(height!);
-  double imageWidth = getWidgetWidth(width!);
+  double imageHeight =
+      getWidgetHeight(height ?? SharedText.screenHeight * 0.25);
+  double imageWidth = getWidgetWidth(width ?? SharedText.screenWidth * 0.25);
 
   return CachedNetworkImage(
     imageUrl: imageUrl,
@@ -51,9 +53,9 @@ Widget commonCachedImageWidget(
       imageString: 'logo.png',
       fit: BoxFit.contain,
       radius: radius,
-      height: height,
+      height: imageHeight,
       imageColor: AppConstants.mainColor,
-      width: width,
+      width: imageWidth,
     ),
   );
 }
