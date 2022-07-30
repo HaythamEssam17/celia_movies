@@ -1,5 +1,6 @@
-import 'package:celia_movies/Constants/Enums/enums.dart';
 import 'package:flutter/material.dart';
+
+import '../../Constants/Enums/device_types.dart';
 
 class DeviceInfo {
   final Orientation orientation;

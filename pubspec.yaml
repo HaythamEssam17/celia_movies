@@ -46,6 +46,8 @@ dependencies:
   connectivity_plus: ^2.2.0
   # local_storage
   shared_preferences: ^2.0.13
+  # Save Images Locally
+  gallery_saver: ^2.3.2
 
 dev_dependencies:
   flutter_test:

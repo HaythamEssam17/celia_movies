@@ -1,4 +1,4 @@
-import 'package:celia_movies/Constants/Enums/enums.dart';
+import '../../../Constants/Enums/error_types.dart';
 
 class CustomError {
   CustomStatusCodeErrorType type;

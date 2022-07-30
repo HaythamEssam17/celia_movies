@@ -1,5 +1,3 @@
-enum DeviceType { mobile, tablet, desktop }
-
 enum CustomStatusCodeErrorType {
   init,
   server,

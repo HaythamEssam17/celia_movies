@@ -1,4 +1,6 @@
+import 'package:celia_movies/Data/Remote/Repositories/popular_people_repository.dart';
 import 'package:celia_movies/Logic/Flutter_Cubits/Connectivity_Cubit/connectivity_cubit.dart';
+import 'package:celia_movies/Logic/Flutter_Cubits/People_Cubit/people_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +21,8 @@ class _MultiBlocProvidersPageState extends State<MultiBlocProvidersPage> {
       providers: [
         BlocProvider<ConnectivityCubit>(
             lazy: false, create: (_) => ConnectivityCubit()..initConnection()),
+        BlocProvider<PeopleCubit>(
+            lazy: false, create: (_) => PeopleCubit(PopularPeopleRepository())),
       ],
       child: widget.body,
     );

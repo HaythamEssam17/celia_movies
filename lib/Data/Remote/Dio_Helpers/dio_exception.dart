@@ -1,6 +1,7 @@
-import 'package:celia_movies/Constants/Enums/enums.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import '../../../Constants/Enums/error_types.dart';
 
 class DioExceptions implements Exception {
   /// custom Exceptions message

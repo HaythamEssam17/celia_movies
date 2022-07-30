@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:celia_movies/Data/Remote/Dio_Helpers/custom_exception.dart';
 import 'package:celia_movies/Data/Remote/Dio_Helpers/dio_helper.dart';
+import 'package:celia_movies/Helpers/app_logs.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,8 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
       case ConnectivityResult.mobile:
       case ConnectivityResult.none:
         connectionStatus = result.toString();
+        logPrint('connectionStatus: $connectionStatus');
+
         if (connectionStatus == ConnectivityResult.none.toString()) {
           emit(NoWifiOrDataInternetConnected());
         } else {

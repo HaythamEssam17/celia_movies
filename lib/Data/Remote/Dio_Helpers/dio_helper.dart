@@ -1,8 +1,10 @@
-import 'package:celia_movies/Constants/Enums/enums.dart';
+import 'package:celia_movies/Constants/Keys/movie_db_keys.dart';
 import 'package:celia_movies/Data/Remote/Dio_Helpers/custom_exception.dart';
 import 'package:celia_movies/Data/Remote/Dio_Helpers/dio_exception.dart';
 import 'package:celia_movies/Helpers/app_logs.dart';
 import 'package:dio/dio.dart';
+
+import '../../../Constants/Enums/error_types.dart';
 
 class DioHelper {
   static late Dio dio;
@@ -12,8 +14,11 @@ class DioHelper {
     try {
       dio = Dio(
         BaseOptions(
-          baseUrl: 'https://realesta.emalleg.net/api',
-          headers: {'Accept': 'application/json'},
+          baseUrl: MovieDBKeys.theMovieDbBaseUrl,
+          headers: {
+            'Accept': 'application/json',
+            'Authorizations': 'Bearer ${MovieDBKeys.theMovieDBAccessToken}',
+          },
           receiveDataWhenStatusError: true,
         ),
       );
