@@ -1,7 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.codeforegypr.celiamovies.celia_movies">
-   <application
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
         android:label="Celia Movies"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

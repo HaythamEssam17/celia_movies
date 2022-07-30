@@ -48,17 +48,19 @@ class PersonDetailsModel {
         deathday: json["deathday"] == null
             ? DateTime.now()
             : DateTime.parse(json["deathday"]),
-        id: json["id"],
-        name: json["name"],
-        alsoKnownAs: List<String>.from(json["also_known_as"].map((x) => x)),
-        gender: json["gender"],
-        biography: json["biography"],
+        id: json["id"] ?? 0,
+        name: json["name"] ?? '',
+        alsoKnownAs: json["also_known_as"] == null
+            ? []
+            : List<String>.from(json["also_known_as"].map((x) => x)),
+        gender: json["gender"] ?? 0,
+        biography: json["biography"] ?? '',
         popularity: json["popularity"].toDouble(),
-        placeOfBirth: json["place_of_birth"],
-        profilePath: json["profile_path"],
-        adult: json["adult"],
-        imdbId: json["imdb_id"],
-        homepage: json["homepage"],
+        placeOfBirth: json["place_of_birth"] ?? '',
+        profilePath: json["profile_path"] ?? '',
+        adult: json["adult"] ?? false,
+        imdbId: json["imdb_id"] ?? '0',
+        homepage: json["homepage"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

@@ -50,7 +50,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppConstants.mainColor,
       appBar: AppBar(
-        title: Text(_peopleCubit.getTotalRecords.toString()),
+        backgroundColor: AppConstants.mainColor,
+        elevation: 0.0,
+        title: const Text('Celia Movie'),
       ),
       body: context.read<ConnectivityCubit>().connectionStatus ==
               'ConnectivityResult.none'

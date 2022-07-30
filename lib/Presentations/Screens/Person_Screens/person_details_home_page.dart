@@ -2,8 +2,11 @@ import 'package:celia_movies/Constants/Keys/movie_db_keys.dart';
 import 'package:celia_movies/Constants/app_constants.dart';
 import 'package:celia_movies/Constants/shared_functions.dart';
 import 'package:celia_movies/Helpers/Routes/route_arguments.dart';
+import 'package:celia_movies/Helpers/Routes/route_names.dart';
 import 'package:celia_movies/Helpers/shared_texts.dart';
 import 'package:celia_movies/Logic/Flutter_Cubits/Connectivity_Cubit/connectivity_cubit.dart';
+import 'package:celia_movies/Logic/Flutter_Cubits/Images_Cubit/image_cubit.dart';
+import 'package:celia_movies/Logic/Flutter_Cubits/Images_Cubit/image_states.dart';
 import 'package:celia_movies/Logic/Flutter_Cubits/Person_Details_Cubit/person_details_cubit.dart';
 import 'package:celia_movies/Logic/Flutter_Cubits/Person_Details_Cubit/person_details_states.dart';
 import 'package:celia_movies/Presentations/Widgets/common_cached_image_widget.dart';
@@ -23,12 +26,17 @@ class PersonDetailsHomePage extends StatefulWidget {
 
 class _PersonDetailsHomePageState extends State<PersonDetailsHomePage> {
   late PersonDetailsCubit _personDetailsCubit;
+  late ImageCubit _imageCubit;
 
   @override
   void initState() {
     super.initState();
     _personDetailsCubit = BlocProvider.of<PersonDetailsCubit>(context);
+    _imageCubit = BlocProvider.of<ImageCubit>(context);
+
     _personDetailsCubit.getPersonDetailsByID(widget.routeArguments.personID!);
+
+    _imageCubit.fetchImagesByPersonID(widget.routeArguments.personID!);
   }
 
   @override
@@ -185,12 +193,58 @@ class _PersonDetailsHomePageState extends State<PersonDetailsHomePage> {
                                     lines: 10,
                                   ),
                                   getSpaceHeight(15),
-                                  CommonTitleText(
-                                    textKey: _personDetailsCubit
-                                        .personDetailsModel.biography!,
-                                    textColor: AppConstants.whiteColor,
-                                    textFontSize: AppConstants.normalFontSize,
-                                    lines: 10,
+
+                                  /// View Actor images
+                                  BlocConsumer<ImageCubit, ImageStates>(
+                                    listener: (context, state) {},
+                                    builder: (context, state) {
+                                      if (state is ImageLoadingState) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      if (state is ImageFailedState) {
+                                        return Center(
+                                          child: CommonTitleText(
+                                            textKey: state.error,
+                                            textColor: AppConstants.whiteColor,
+                                          ),
+                                        );
+                                      }
+                                      return GridView.builder(
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2,
+                                                childAspectRatio: 1,
+                                                crossAxisSpacing: 10,
+                                                mainAxisSpacing: 10),
+                                        itemBuilder: (context, index) {
+                                          return InkWell(
+                                            onTap: () {
+                                              Navigator.pushNamed(context,
+                                                  RouteNames.imageViewPageRoute,
+                                                  arguments: RouteArguments(
+                                                      imagePath: MovieDBKeys
+                                                              .imagePathUrl +
+                                                          _imageCubit
+                                                              .profiles[index]
+                                                              .filePath!));
+                                            },
+                                            child: commonCachedImageWidget(
+                                                context,
+                                                MovieDBKeys.imagePathUrl +
+                                                    _imageCubit.profiles[index]
+                                                        .filePath!,
+                                                fit: BoxFit.fill,
+                                                radius: 10),
+                                          );
+                                        },
+                                        itemCount: _imageCubit.profiles.length,
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                      );
+                                    },
                                   ),
                                 ],
                               ],

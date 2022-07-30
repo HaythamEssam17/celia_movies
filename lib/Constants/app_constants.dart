@@ -7,6 +7,8 @@ class AppConstants {
   static const Color whiteColor = Color(0xffFFFFFF);
   static const Color lightWhiteColor = Color(0xffF5F5F5);
   static const Color blueColor = Color(0xff2C89DE);
+  static const Color greenColor = Color(0xff59B624);
+  static const Color redColor = Color(0xffE34967);
 
   /// Radius
   static const double cardBorderRadius = 15.0;
