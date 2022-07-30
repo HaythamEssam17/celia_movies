@@ -13,3 +13,5 @@ class PeopleFailedState extends PeopleStates {
 
   PeopleFailedState({required this.error});
 }
+
+class FetchPeoplesLocalState extends PeopleStates {}

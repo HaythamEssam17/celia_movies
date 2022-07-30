@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:celia_movies/Constants/Keys/movie_db_keys.dart';
 import 'package:celia_movies/Data/Interfaces/perple_interface.dart';
 import 'package:celia_movies/Data/Models/base_model.dart';
@@ -6,6 +8,7 @@ import 'package:celia_movies/Data/Remote/Dio_Helpers/custom_error.dart';
 import 'package:celia_movies/Data/Remote/Dio_Helpers/custom_exception.dart';
 import 'package:celia_movies/Data/Remote/Dio_Helpers/dio_helper.dart';
 import 'package:celia_movies/Helpers/app_logs.dart';
+import 'package:celia_movies/Helpers/shared_prefs.dart';
 import 'package:dio/dio.dart';
 
 class PopularPeopleRepository extends IPeopleInterface {
@@ -24,6 +27,10 @@ class PopularPeopleRepository extends IPeopleInterface {
       if (response.statusCode == 200) {
         /// parsing response to user model
         baseModel = BaseModel.fromJson(response.data);
+
+        /// Save Data Locally
+        var result = json.encode(baseModel.results!);
+        await DefaultSharedPrefs.setPeoples(result);
         return baseModel;
       } else {
         return baseModel;
